@@ -20,29 +20,23 @@ describe('reducer', () => {
     const action = {type: 'NEXT'};
     const nextState = reducer(initialState, action);
     expect(nextState).to.equal(fromJS({
-      vote: {
-        id: 1,
-        pair: ['Trainspotting', 'Casablanca']
-      },
+      id: 1,
+      pair: ['Trainspotting', 'Casablanca'],
       entries: []
     }));
   });
 
   it('handles VOTE', () => {
     const initialState = fromJS({
-      vote: {
-        pair: ['Trainspotting', 'Casablanca']
-      },
+      pair: ['Trainspotting', 'Casablanca'],
       entries: []
     });
     const action = {type: 'VOTE', entry: 'Trainspotting'};
     const nextState = reducer(initialState, action);
     expect(nextState).to.equal(fromJS({
-      vote: {
-        pair: ['Trainspotting', 'Casablanca'],
-        tally: {
-          'Trainspotting': 1
-        }
+      pair: ['Trainspotting', 'Casablanca'],
+      tally: {
+        'Trainspotting': 1
       },
       entries: []
     }));

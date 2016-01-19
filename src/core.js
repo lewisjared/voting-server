@@ -7,7 +7,7 @@ export function setEntries(state, entries) {
 }
 
 function getWinners(vote) {
-  if (!vote) return [];
+  if (!vote.get('pair')) return [];
 
   const [a, b] = vote.get('pair');
   const aVotes = vote.getIn(['tally', a], 0);
@@ -23,20 +23,18 @@ function getWinners(vote) {
 }
 
 export function next(state) {
-  const entries = state.get('entries').concat(getWinners(state.get('vote')));
-  const id = state.getIn(['vote', 'id'], 0);
+  const entries = state.get('entries').concat(getWinners(state));
+  const id = state.get('id', 0);
 
   // The last item is the winner
   if (entries.size === 1) {
     // This could also be Map({winner: entries.first()}), but this will allow other unrelated value to be in the state
-    return state.remove('vote').remove('entries').set('winner', entries.first())
+    return state.remove('entries').remove('pair').remove('tally').set('winner', entries.first())
   } else {
     // Take the first 2 items in the entries as the next two competitors
-    return state.merge({
-      vote: Map({
-        id: id + 1,
-        pair: entries.take(2)
-      }),
+    return state.remove('tally').merge({
+      id: id + 1,
+      pair: entries.take(2),
       entries: entries.skip(2)
     });
   }
