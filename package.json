@@ -1,7 +1,8 @@
 {
   "name": "voting-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Server for simple voting app",
+  "repository": "https://github.com/lewisjared/voting-server.git",
   "main": "index.js",
   "scripts": {
     "start": "babel-node index.js",
@@ -9,8 +10,8 @@
     "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Jared Lewis <jared@jared.kiwi.nz>",
+  "license": "MIT",
   "babel": {
     "presets": [
       "es2015"
