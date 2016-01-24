@@ -11,7 +11,7 @@ export default function startServer(store) {
       const state = store.getState();
       const changedRoom = state.get('changedRoom');
       if (changedRoom) {
-        io.to(changedRoom).emit(store.get(changedRoom).toJS())
+        io.in(changedRoom).emit('state', state.getIn(['rooms', changedRoom]).toJS())
       }
     }
   );
@@ -21,9 +21,9 @@ export default function startServer(store) {
     socket.on('action', store.dispatch.bind(store));
 
     socket.on('joinRoom', function (room) {
-      socket.join(socket);
+      socket.join(room);
       console.log('joining room', room);
-      socket.emit('joinRoomSuccess', store.getState().toJS());
+      socket.emit('joinRoomSuccess', store.getState().getIn(['rooms', room]).toJS());
     });
 
     socket.on('leaveRoom', function (room) {
