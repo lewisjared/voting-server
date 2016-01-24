@@ -6,20 +6,31 @@ import reducer from '../src/reducer';
 describe('reducer', () => {
   it('handles SET_ENTRIES', () => {
     const initialState = Map();
-    const action = {type: 'SET_ENTRIES', entries: ['Trainspotting']};
+    const action = {type: 'SET_ENTRIES', room: 'test', entries: ['Trainspotting']};
     const nextState = reducer(initialState, action);
-    expect(nextState).to.equal(fromJS({
+    expect(nextState.getIn(['rooms', 'test'])).to.equal(fromJS({
       entries: ['Trainspotting']
     }));
   });
 
+  it('sets the last changed room', () => {
+    const initialState = Map();
+    const action = {type: 'SET_ENTRIES', room: 'test', entries: ['Trainspotting']};
+    const nextState = reducer(initialState, action);
+    expect(nextState.get('changedRoom')).to.equal('test');
+  });
+
   it('handles NEXT', () => {
     const initialState = fromJS({
-      entries: ['Trainspotting', 'Casablanca']
+      rooms: {
+        test: {
+          entries: ['Trainspotting', 'Casablanca']
+        }
+      }
     });
-    const action = {type: 'NEXT'};
+    const action = {type: 'NEXT', room: 'test'};
     const nextState = reducer(initialState, action);
-    expect(nextState).to.equal(fromJS({
+    expect(nextState.getIn(['rooms', 'test'])).to.equal(fromJS({
       id: 1,
       pair: ['Trainspotting', 'Casablanca'],
       entries: []
@@ -28,12 +39,16 @@ describe('reducer', () => {
 
   it('handles VOTE', () => {
     const initialState = fromJS({
-      pair: ['Trainspotting', 'Casablanca'],
-      entries: []
+      rooms: {
+        test: {
+          pair: ['Trainspotting', 'Casablanca'],
+          entries: []
+        }
+      }
     });
-    const action = {type: 'VOTE', entry: 'Trainspotting'};
+    const action = {type: 'VOTE', room: 'test', entry: 'Trainspotting'};
     const nextState = reducer(initialState, action);
-    expect(nextState).to.equal(fromJS({
+    expect(nextState.getIn(['rooms', 'test'])).to.equal(fromJS({
       pair: ['Trainspotting', 'Casablanca'],
       tally: {
         'Trainspotting': 1
@@ -43,21 +58,34 @@ describe('reducer', () => {
   });
 
   it('has initial state', () => {
-    const action = {type: 'SET_ENTRIES', entries: ['Trainspotting', 'Casablanca']}
+    const action = {
+      type: 'SET_ENTRIES',
+      room: 'test',
+      entries: ['Trainspotting', 'Casablanca']
+    };
     const nextState = reducer(undefined, action);
-    expect(nextState).to.equal(fromJS({
+    expect(nextState.getIn(['rooms', 'test'])).to.equal(fromJS({
       entries: ['Trainspotting', 'Casablanca']
     }));
   });
 
   it('handles bad actions', () => {
     const initialState = fromJS({
-      entries: ['Trainspotting', 'Casablanca']
+      rooms: {}
     });
-    const action = {type: 'NO_MATCHING_ACTION'}
+    const action = {type: 'NO_MATCHING_ACTION'};
     const nextState = reducer(initialState, action);
     expect(nextState).to.equal(fromJS({
-      entries: ['Trainspotting', 'Casablanca']
+      rooms: {}
     }));
+  });
+
+  it('doesnt set changedRoom on bad action', () => {
+    const initialState = fromJS({
+      changedRoom: 'test'
+    });
+    const action = {type: 'NO_MATCHING_ACTION'};
+    const nextState = reducer(initialState, action);
+    expect(nextState.get('changedRoom')).to.equal('test');
   });
 });

@@ -6,14 +6,22 @@ import makeStore from '../src/store';
 describe('store', () => {
   it('is a correctly configured redux store', () => {
     const store = makeStore();
-    expect(store.getState()).to.equal(Map());
+    expect(store.getState()).to.equal(fromJS({
+      rooms: {}
+    }));
 
     store.dispatch({
       type: 'SET_ENTRIES',
+      room: 'test',
       entries: ['Trainspotting', '28 Days Later']
     });
     expect(store.getState()).to.equal(fromJS({
-      entries: ['Trainspotting', '28 Days Later']
+      rooms: {
+        test: {
+          entries: ['Trainspotting', '28 Days Later']
+        }
+      },
+      changedRoom: 'test'
     }));
   });
 });

@@ -1,6 +1,9 @@
-import {List, Map} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
 
-export const INTIAL_STATE = Map();
+export const INTIAL_STATE = fromJS({
+  rooms: {}
+});
+export const INTIAL_ROOM_STATE = Map();
 
 export function setEntries(state, entries) {
   return state.set('entries', List(entries));
