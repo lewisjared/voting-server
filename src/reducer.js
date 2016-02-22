@@ -5,7 +5,6 @@ function updateRoom(state, room, roomState) {
 }
 
 export default function reducer(state=INTIAL_STATE, action) {
-  console.log(action);
   let roomState = state.getIn(['rooms', action.room], INTIAL_ROOM_STATE);
 
   switch (action.type) {
