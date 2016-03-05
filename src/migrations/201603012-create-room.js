@@ -8,13 +8,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
+      name: {
         type: Sequelize.STRING
       },
-      room: {
-        type: Sequelize.STRING
+      link: {
+        type: Sequelize.STRING,
+        unique: true
       },
-      entry: {
+      createdBy: {
         type: Sequelize.STRING
       },
       createdAt: {

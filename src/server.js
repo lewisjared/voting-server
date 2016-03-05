@@ -1,5 +1,6 @@
 import Server from 'socket.io';
 import models from './models'
+import {createRoom} from './roomService'
 
 export default function startServer(store) {
   models.sequelize.sync({force: true})
@@ -32,6 +33,13 @@ export default function startServer(store) {
         socket.on('leaveRoom', function (room) {
           socket.leave(room);
           socket.emit('leaveRoomSuccess');
+        });
+
+        socket.on('createRoom', function (room) {
+          createRoom(room)
+          .then(function (room) {
+            socket.emit('createRoomSuccess', room);
+          })
         })
       })
     });
