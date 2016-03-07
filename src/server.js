@@ -38,7 +38,8 @@ export default function startServer(store) {
         socket.on('createRoom', function (room) {
           createRoom(room)
           .then(function (room) {
-            socket.emit('createRoomSuccess', room);
+            let link = '/room/' + room.link
+            socket.emit('createRoomSuccess', link);
           })
         })
       })
